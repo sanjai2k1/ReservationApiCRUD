@@ -11,8 +11,8 @@ using ReservationApiCRUD.Models;
 namespace ReservationApiCRUD.Migrations
 {
     [DbContext(typeof(ReservationContext))]
-    [Migration("20240828160902_Initial")]
-    partial class Initial
+    [Migration("20240829044633_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

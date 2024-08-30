@@ -7,6 +7,8 @@ namespace ReservationApiCRUD.Models
     public class ReservationRepository : IRepository
     {
         private readonly ReservationContext _context;
+
+
         public ReservationRepository(ReservationContext context)
         {
             _context = context;
@@ -30,9 +32,9 @@ namespace ReservationApiCRUD.Models
             return await _context.Reservations.FindAsync(id); // Use FindAsync for async lookup by ID
         }
 
-        public async Task<Reservation> UpdateReservation(int id, Reservation updatedReservation)
+        public async Task<Reservation> UpdateReservation( Reservation updatedReservation)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservations.FindAsync(updatedReservation.Id);
             if (reservation == null)
             {
                 return null; // Return null if the reservation doesn't exist

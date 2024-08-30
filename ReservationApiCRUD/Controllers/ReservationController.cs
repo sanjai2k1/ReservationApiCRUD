@@ -9,7 +9,7 @@ namespace ReservationApiCRUD.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ReservationController : Controller
+    public class ReservationController : ControllerBase
     {
         private readonly IRepository _repository;
 
@@ -19,7 +19,7 @@ namespace ReservationApiCRUD.Controllers
             _repository = repository;
         }
  [HttpPost]
-    public async Task<IActionResult> AddReservation([FromBody] Reservation reservation)
+    public async Task<IActionResult> AddReservation( Reservation reservation)
     {
         if (reservation == null)
         {
@@ -27,7 +27,7 @@ namespace ReservationApiCRUD.Controllers
         }
 
         var createdReservation = await _repository.AddReservationAsync(reservation);
-        return CreatedAtAction(nameof(GetReservationById), new { id = createdReservation.Id }, createdReservation);
+            return Ok(createdReservation);
     }
 
         [HttpGet]
@@ -54,9 +54,9 @@ namespace ReservationApiCRUD.Controllers
 
         [HttpPut]
 
-        public async Task<ActionResult<Reservation>> UpdateReservation(int id, Reservation updatedReservation)
+        public async Task<ActionResult<Reservation>> UpdateReservation(Reservation updatedReservation)
         {
-            return await _repository.UpdateReservation(id, updatedReservation);
+            return await _repository.UpdateReservation(updatedReservation);
         }
     }
 }

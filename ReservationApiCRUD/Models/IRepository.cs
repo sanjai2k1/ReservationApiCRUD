@@ -9,7 +9,7 @@ namespace ReservationApiCRUD.Models
 
         Task<IEnumerable<Reservation>> GetAll();
 
-        Task<Reservation> UpdateReservation(int id, Reservation updatedReservation);
+        Task<Reservation> UpdateReservation(Reservation updatedReservation);
 
         Task<bool>  DeleteReservation(int id);
 
