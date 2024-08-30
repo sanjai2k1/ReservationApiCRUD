@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using NuGet.Protocol.Core.Types;
 using ReservationApiCRUD.Models;
 using System.Collections;
@@ -9,15 +10,48 @@ namespace ReservationApiCRUD.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ReservationController : ControllerBase
+    public class ReservationController : Controller
     {
         private readonly IRepository _repository;
 
+        private readonly JwtService _jwtService;
 
-        public ReservationController(IRepository repository)
+        public ReservationController(IRepository repository,JwtService jwtService)
         {
             _repository = repository;
+            _jwtService = jwtService;
         }
+
+        [AllowAnonymous]
+        [HttpGet("Login")]
+        public IActionResult ValidLogin()
+        {
+           
+            var accessToken =  _jwtService.GenerateJSONWebToken();
+         
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                IsEssential = true,
+                Secure = false,
+                SameSite = SameSiteMode.None,
+                Domain = "localhost", //using https://localhost:44340/ here doesn't work
+                Expires = DateTime.UtcNow.AddDays(1)
+
+            };
+            HttpContext.Response.Cookies.Append("jwtcookie", accessToken, cookieOptions);
+           
+
+            return Ok(new
+            {
+                token = accessToken
+            });
+
+
+        }
+
+
+
  [HttpPost]
     public async Task<IActionResult> AddReservation( Reservation reservation)
     {
@@ -31,9 +65,9 @@ namespace ReservationApiCRUD.Controllers
     }
 
         [HttpGet]
-        public async Task<IEnumerable<Reservation>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return await _repository.GetAll();
+            return Ok (new { content =  await _repository.GetAll()});
         }
 
     [HttpGet("{id}")]
